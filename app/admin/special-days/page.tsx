@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Plus, Trash, Calendar as CalendarIcon, Repeat, Pencil } from "lucide-react"
+import { Plus, Trash, Calendar as CalendarIcon, Repeat, Pencil, Upload } from "lucide-react"
 import dayjs from "dayjs"
 import "dayjs/locale/tr"
 
@@ -124,6 +124,12 @@ export default function SpecialDaysPage() {
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         Test Verisi Ekle
                     </Button>
+                    <Link href="/admin/special-days/import">
+                        <Button variant="outline" className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200">
+                            <Upload className="mr-2 h-4 w-4" />
+                            Excel Yükle
+                        </Button>
+                    </Link>
                     <Button
                         variant="outline"
                         id="cron-btn"

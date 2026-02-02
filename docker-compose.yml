@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: e4_reminder_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "6090:6090"
+    environment:
+      - DATABASE_URL=file:/app/db/prod.db
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - NEXT_PUBLIC_APP_URL=http://localhost:6090
+      # Add other env vars here
+    volumes:
+      # Persist the database directory
+      - ./docker-data/db:/app/db
+      - ./public/uploads:/app/public/uploads
+    # Initialize DB schema if not exists
+    command: >
+      sh -c "npx prisma db push --schema=./prisma/schema.prisma && node server.js"

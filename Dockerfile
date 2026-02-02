@@ -1,4 +1,5 @@
 FROM node:20-slim AS base
+ENV HOME="/app"
 
 # Install dependencies only when needed
 FROM base AS deps

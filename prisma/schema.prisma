@@ -1,0 +1,45 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Union {
+  id              String       @id @default(uuid())
+  name            String
+  telegramChatId  String?      // The group ID for this union (e.g. -100123456789)
+  internalChatId  String?      // Optional: Internal group ID specific to this union if different from global
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  specialDays     SpecialDay[]
+
+  @@map("unions")
+}
+
+model SpecialDay {
+  id          String    @id @default(uuid())
+  title       String
+  description String?   // Optional message template or note
+  date        DateTime  // Base date. If recurring, we use month/day from this.
+  isRecurring Boolean   @default(true)
+  reminderDaysBefore Int? @default(0) // 0 means only on the day. >0 means also X days before.
+  
+  unionId     String?
+  union       Union?    @relation(fields: [unionId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("special_days")
+}
+
+model GlobalSettings {
+  id              String @id @default(uuid())
+  key             String @unique // e.g., "internal_group_chat_id"
+  value           String
+}

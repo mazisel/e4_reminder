@@ -24,6 +24,9 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # Generate Prisma Client
 RUN npx prisma generate
 
+# Increase memory limit for build
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
 # Build
 RUN npm run build
 

@@ -42,6 +42,9 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+ENV HOME="/home/nextjs"
+ENV NPM_CONFIG_CACHE="/home/nextjs/.npm"
+RUN mkdir -p /home/nextjs/.npm && chown -R nextjs:nodejs /home/nextjs
 
 COPY --from=builder /app/public ./public
 

@@ -41,9 +41,23 @@ export default function SpecialDaysPage() {
 
     const handleDelete = async (id: string) => {
         if (!confirm("Bu kaydı silmek istediğinize emin misiniz?")) return
-        // Simple delete implementation would go here...
-        // For now, we can try to call a delete API if implemented, or just alert.
-        alert("Silme işlemi henüz API'da eksik (Demo)")
+
+        try {
+            const res = await fetch(`/api/special-days/${id}`, {
+                method: "DELETE"
+            })
+
+            if (res.ok) {
+                // Remove from local state immediately
+                setSpecialDays(prev => prev.filter(day => day.id !== id))
+            } else {
+                const data = await res.json()
+                alert("Silme başarısız: " + (data.error || "Bilinmeyen hata"))
+            }
+        } catch (error) {
+            console.error("Delete failed", error)
+            alert("Silme işlemi sırasında bir hata oluştu.")
+        }
     }
 
     const handleCreateTest = async () => {

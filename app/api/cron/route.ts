@@ -3,6 +3,8 @@ import { db } from "@/lib/prisma"
 import { sendTelegramMessage } from "@/lib/telegram"
 import dayjs from "dayjs"
 
+export const dynamic = 'force-dynamic';
+
 // Helper to determine if a special day matches "today" or "upcoming"
 function checkMatch(specialDay: any, today: dayjs.Dayjs) {
     const dayDate = dayjs(specialDay.date)

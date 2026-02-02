@@ -22,6 +22,8 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED 1
 
 # Generate Prisma Client
+# We need a dummy DB URL for build time (Prisma validation)
+ENV DATABASE_URL="file:./dev.db"
 RUN npx prisma generate
 
 # Increase memory limit for build

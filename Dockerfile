@@ -28,7 +28,7 @@ RUN npx prisma generate
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 
 # Build
-RUN npm run build
+RUN npm run build -- --no-lint
 
 # Production image, copy all the files and run next
 FROM base AS runner

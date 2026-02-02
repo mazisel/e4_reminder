@@ -24,7 +24,7 @@ export async function getBotUpdates() {
         // Ensure webhook is deleted to allow getUpdates (long polling)
         await telegramBot.telegram.deleteWebhook()
 
-        const updates = await telegramBot.telegram.getUpdates()
+        const updates = await (telegramBot.telegram as any).getUpdates()
         const botInfo = await telegramBot.telegram.getMe()
 
         return { updates, botInfo }

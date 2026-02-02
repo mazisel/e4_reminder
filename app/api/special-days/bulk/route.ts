@@ -22,7 +22,8 @@ export async function POST(req: Request) {
             isRecurring: day.isRecurring ?? true, // Default to recurring if not specified
             description: day.description || null,
             unionId: unionId || null, // If unionId is provided, assign to that union, else global
-            reminderDaysBefore: day.reminderDaysBefore ? parseInt(day.reminderDaysBefore) : 0
+            reminderDaysBefore: day.reminderDaysBefore ? parseInt(day.reminderDaysBefore) : 0,
+            isInternal: day.isInternal || false
         }))
 
         // Prisma createMany is supported in SQLite

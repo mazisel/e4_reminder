@@ -20,6 +20,7 @@ interface ImportedDay {
     description?: string
     isRecurring?: boolean
     reminderDaysBefore?: number
+    isInternal?: boolean
 }
 
 export default function ImportPage() {
@@ -28,6 +29,7 @@ export default function ImportPage() {
     const [previewData, setPreviewData] = useState<ImportedDay[]>([])
     const [unions, setUnions] = useState<Union[]>([])
     const [selectedUnionId, setSelectedUnionId] = useState<string>("")
+    const [isInternal, setIsInternal] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
@@ -75,7 +77,8 @@ export default function ImportPage() {
                         date: dateStr ? new Date(dateStr).toISOString() : new Date().toISOString(),
                         description: row["Aciklama"] || row["Description"] || "",
                         isRecurring: (row["Tekrar"] === "Evet" || row["Tekrar"] === true || row["Recurring"] === true) ? true : true, // Default true
-                        reminderDaysBefore: row["ErkenHatirlatma"] || 0
+                        reminderDaysBefore: row["ErkenHatirlatma"] || 0,
+                        isInternal: undefined // Will be set during submission or can be read from excel too
                     }
                 })
 
@@ -99,7 +102,7 @@ export default function ImportPage() {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    days: previewData,
+                    days: previewData.map(d => ({ ...d, isInternal })), // Apply toggle to all items
                     unionId: selectedUnionId || null
                 })
             })
@@ -160,6 +163,25 @@ export default function ImportPage() {
                         </select>
                         <p className="text-xs text-muted-foreground mt-2">
                             Seçim yapmazsanız kayıtlar "Genel" olarak işaretlenir.
+                        </p>
+                    </div>
+
+                    <div className="p-4 border rounded-lg bg-white shadow-sm">
+                        <h2 className="font-semibold mb-4">3. Görünürlük Ayarı</h2>
+                        <div className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                id="isInternal"
+                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                checked={isInternal}
+                                onChange={(e) => setIsInternal(e.target.checked)}
+                            />
+                            <label htmlFor="isInternal" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                Sadece Takım Grubuna Gönder (Müşteriye Gitmesin)
+                            </label>
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-2 ml-6">
+                            Bu seçenek işaretlenirse, bildirimler sadece iç ekibe (Internal Group) gider, müşterinin Telegram grubuna gönderilmez.
                         </p>
                     </div>
 

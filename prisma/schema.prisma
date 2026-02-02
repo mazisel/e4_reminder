@@ -29,6 +29,7 @@ model SpecialDay {
   date        DateTime  // Base date. If recurring, we use month/day from this.
   isRecurring Boolean   @default(true)
   reminderDaysBefore Int? @default(0) // 0 means only on the day. >0 means also X days before.
+  isInternal  Boolean   @default(false) // If true, only notified to internal group
   
   unionId     String?
   union       Union?    @relation(fields: [unionId], references: [id], onDelete: Cascade)

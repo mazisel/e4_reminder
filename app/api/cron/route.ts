@@ -84,13 +84,15 @@ async function processCronJob() {
 
                 if (specialDay.unionId && specialDay.union) {
                     // Specific Union
-                    if (specialDay.union.telegramChatId) {
+                    // If NOT internal only, send to customer
+                    if (!specialDay.isInternal && specialDay.union.telegramChatId) {
                         notificationsToSend.push({
                             chatId: specialDay.union.telegramChatId,
                             message: message,
                             unionName: specialDay.union.name
                         })
                     }
+                    // Always send to internal if exists
                     if (specialDay.union.internalChatId) {
                         notificationsToSend.push({
                             chatId: specialDay.union.internalChatId,
@@ -102,13 +104,15 @@ async function processCronJob() {
                     // Global logic
                     const allUnions = await db.union.findMany()
                     for (const union of allUnions) {
-                        if (union.telegramChatId) {
+                        // If NOT internal only, send to customer
+                        if (!specialDay.isInternal && union.telegramChatId) {
                             notificationsToSend.push({
                                 chatId: union.telegramChatId,
                                 message: message,
                                 unionName: union.name
                             })
                         }
+                        // Always send to internal if exists
                         if (union.internalChatId) {
                             notificationsToSend.push({
                                 chatId: union.internalChatId,
